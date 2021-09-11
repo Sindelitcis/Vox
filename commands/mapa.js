@@ -7,9 +7,7 @@ const { createCanvas, loadImage } = require('canvas');
 //const Canvas = require('canvas')
 
 module.exports.run = async(client, message, args) => {
-
   const idDiscord = message.author.id;
-
   const usuario = await controller.contas.getOne({idDiscord: idDiscord});
   if(!usuario){
     return message.reply("Você não tem uma conta.");
@@ -30,7 +28,7 @@ module.exports.run = async(client, message, args) => {
   const mapa = await controller.regioes.getOne({_id: personagem.regiao});
 
   const coordenadas = mapa.posicao;
-  const imgDir = __dirname.slice(0,-"commands".length)+'src/mapa.png';
+  const imgDir = path.join(__dirname, '../src/mapa.png');
 
   const canvas = createCanvas(526, 640)
   const ctx = canvas.getContext('2d')
