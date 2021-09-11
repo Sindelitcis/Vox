@@ -5,9 +5,10 @@ class Personagem {
         // retorna o personagem com esse id
         return controller.personagens.getOne({ _id: id });
     }
-    static info(personagem_objeto) {
+    static async info(personagem_objeto) {
         // retorna as informações do personagem em string
-        return personagem_objeto.nome + ' - ' + personagem_objeto.nivel;
+        const classe = await controller.classes.getOne({_id: personagem_objeto.classe});
+        return personagem_objeto.nome + ' - ' + personagem_objeto.nivel + ' - ' + classe.nome + ' ' + classe.emoji;
     }
     static async getByUser(id_discord) {
         // retorna todos os personagem do usuário com esse ID DISCORD

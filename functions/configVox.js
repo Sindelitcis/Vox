@@ -1,5 +1,4 @@
 const controller = require('../controller');
-const Discord = require('discord.js');
 const { CONFIG } = require('../constants');
 
 module.exports = async(client, message, args, servidor) => {
