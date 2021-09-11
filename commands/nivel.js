@@ -7,5 +7,5 @@ module.exports.run = async(client, message, args) => {
   const personagem = await controller.personagens.getOne({_id: conta.personagemAtivo});
   const msg = await message.reply(`você está nível [**${personagem.nivel}**]`);
   msg.delete({timeout: DELETE_MESSAGE_TIMEOUT_SHORT})
-  console.log(message.guild)
+  //console.log(message.guild)
 }
