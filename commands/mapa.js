@@ -1,31 +1,37 @@
-const controller = require('../controller');
 const Discord = require('discord.js');
 const { DELETE_MESSAGE_TIMEOUT_LONG } = require('../constants');
-const path = require('path')
+const path = require('path');
 const { createCanvas, loadImage } = require('canvas');
+const Conta = require('../controllers/conta');
+const Guilda = require('../controllers/guilda');
+const Personagem = require('../controllers/personagem');
+const Regiao = require('../controllers/regiao');
 
-//const Canvas = require('canvas')
 
-module.exports.run = async(client, message, args) => {
+module.exports.run = async (client, message, args) => {
   const idDiscord = message.author.id;
-  const usuario = await controller.contas.getOne({idDiscord: idDiscord});
-  if(!usuario){
+  const usuario = await Conta.getByDiscordID(idDiscord);
+
+  if (!usuario) {
     return message.reply("Você não tem uma conta.");
   }
-  const guilda = await controller.guildas.getOne({_id: usuario.guilda});
+  const guilda = await Guilda.get(usuario.guilda);
 
-  const usuariosDaGuilda = await controller.contas.get({guilda: usuario.guilda});
-  if(!usuariosDaGuilda.length){
+  if (!guilda) {
+    return message.reply('Você não possui uma guilda.');
+  }
+  const usuariosDaGuilda = await Guilda.getUsers(usuario.guilda);
+
+  if (!usuariosDaGuilda.length) {
     return message.reply("Esta guilda está vazia.");
   }
+  const personagem = await Personagem.getActive(usuario);
 
-  const personagem = await controller.personagens.getOne({_id: usuario.personagemAtivo});
-  if(!personagem){
-    return message.reply("Você não esta com nenhum personagem ativo.");
+  if (!personagem) {
+    return message.reply("Você não tem nenhum personagem ativo.");
   }
 
-
-  const mapa = await controller.regioes.getOne({_id: personagem.regiao});
+  const mapa = await Regiao.get(personagem.regiao);
 
   const coordenadas = mapa.posicao;
   const imgDir = path.join(__dirname, '../src/mapa.png');
@@ -34,7 +40,7 @@ module.exports.run = async(client, message, args) => {
   const ctx = canvas.getContext('2d')
 
 
-  loadImage(imgDir).then(async(image) => {
+  loadImage(imgDir).then(async (image) => {
     ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
     drawBall({
       cor: 'rgba(256,0,0,0.8)',
@@ -42,14 +48,12 @@ module.exports.run = async(client, message, args) => {
       tamanho: 5
     });
 
-    if(guilda){
-      const lider = await controller.contas.getOne({_id: guilda.lider});
-
-      const personagemLider = await controller.personagens.getOne({_id: lider.personagemAtivo});
-      const regiaoLider = await controller.regioes.getOne({_id: personagemLider.regiao});
-    
-      for(const usuarioNaGuilda of usuariosDaGuilda){
-        if(usuarioNaGuilda._id.toString() != guilda.lider.toString() && usuarioNaGuilda.idDiscord !== message.author.id){
+    if (guilda) {
+      const lider = await Conta.get(guilda.lider);
+      const personagemLider = await Personagem.getActive(lider);
+      const regiaoLider = await Regiao.get(personagemLider.regiao);
+      for (const usuarioNaGuilda of usuariosDaGuilda) {
+        if (usuarioNaGuilda._id.toString() != guilda.lider.toString() && usuarioNaGuilda.idDiscord !== message.author.id) {
           drawBall({
             cor: 'rgba(0,0,256,0.5)',
             posicao: coordenadas,
@@ -57,7 +61,7 @@ module.exports.run = async(client, message, args) => {
           });
         }
       }
-      if(message.author.id !== lider.idDiscord){
+      if (message.author.id !== lider.idDiscord) {
         drawBall({
           cor: 'rgba(255,165,0,0.8)',
           posicao: regiaoLider.posicao,
@@ -68,11 +72,11 @@ module.exports.run = async(client, message, args) => {
     const sfattach = new Discord.MessageAttachment(canvas.toBuffer(), 'image.png');
 
     const msg = await message.reply(sfattach);
-    msg.delete({timeout: DELETE_MESSAGE_TIMEOUT_LONG})
+    msg.delete({ timeout: DELETE_MESSAGE_TIMEOUT_LONG })
 
   })
 
-  function drawBall({cor, tamanho, posicao}){
+  function drawBall({ cor, tamanho, posicao }) {
     ctx.beginPath();
     ctx.arc(posicao.x, posicao.y, tamanho, 0, 2 * Math.PI, false);
     ctx.lineWidth = 3;
