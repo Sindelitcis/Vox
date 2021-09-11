@@ -1,0 +1,18 @@
+[
+  {
+    "comandos": [
+      "level",
+      "nível",
+      "levels",
+      "níveis",
+      "niveis"
+    ],
+    "arquivo": "nivel"
+  },
+  {
+    "comandos": [
+      "mapas"
+    ],
+    "arquivo": "mapa"
+  }
+]
