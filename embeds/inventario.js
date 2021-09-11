@@ -6,7 +6,7 @@ const embed = (client, message) => {
   
   return new Discord.MessageEmbed()
     .setAuthor(`Escolha a opção desejada, ${message.author.username}.`, message.author.avatarURL())
-    .setColor(#f08315)
+    .setColor('#f08315')
     .setDescription(`\`⚒️ Lista de Personagens.\`\n\`💰 Saldo.\`\n\`🥳 Inventário.\`\n\`🎖️ Deslogar.\``)
     .setColor("#36393F")
 
