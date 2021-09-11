@@ -1,10 +1,10 @@
+require('dotenv').config()
 const express = require('express');
 const app = express();
 const Discord = require('discord.js');
 const client = new Discord.Client(); 
 const config = require("./config.json");
 const controller = require('./controller');
-
 app.get("/", async (req, res) => {
   const ping = new Date();
   ping.setHours(ping.getHours() - 3);
