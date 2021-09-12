@@ -5,15 +5,16 @@ const excluir = require('../functions/excluirVox');
 const config = require('../functions/configVox');
 
 module.exports.run = async (client, message, args) => {
-  
+  const timer = ms => new Promise(res => setTimeout(res, ms))
   const servidor = await controller.servidores.getOne({idDiscord: message.guild.id, desativado: {$exists: false}});
   if(servidor){
     console.log('começou a excluir')
     await excluir(client, message, args, servidor);
     console.log('terminou de excluir')
-    const servidor_ = await controller.servidores.getOne({idDiscord: message.guild.id});
+    timer(500)
+    //const servidor_ = await controller.servidores.getOne({idDiscord: message.guild.id});
     console.log('começou a configurar')
-    await config(client, message, args, servidor_);
+    await config(client, message, args, servidor, true);
     console.log('terminou de configurar')
   }
 
