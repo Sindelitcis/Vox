@@ -13,10 +13,10 @@ exports.run = async (client, message, args) => {
       msg: await message.reply({ content: "forneça um número de até **99 mensagens** a serem excluídas" }),
       delay: DELETE_MESSAGE_TIMEOUT_SHORT
     }
-  const fetched = await message.channel.messages.fetch({
-    limit: deleteCount + 1
-  });
-  try {
+    try {
+    const fetched = await message.channel.messages.fetch({
+      limit: deleteCount + 1
+    });
     await message.channel.bulkDelete(fetched);
     return {
       msg: await message.channel.send({ content: `**${args[0]} mensagens limpas nesse chat!**` }),

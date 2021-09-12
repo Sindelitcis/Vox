@@ -46,7 +46,7 @@ const execComando = async (message) => {
       try {
         if (msg && !msg.deleted) msg.delete();
         if (message && !message.deleted) message.delete();
-      } catch (e) { console.error(e) }
+      } catch (e) { console.error(e); throw e }
     }, delay)
     //await message.delete({ timeout: 150 })
   } catch (err) {
@@ -113,19 +113,6 @@ client.on("ready", () => {
 //   }
 //   //Envia um aviso que ele não pode postar convites naquele chat.
 // });
-client.on('interactionCreate', async interaction => {
-  console.log(101)
-  if (!interaction.isCommand()) return;
-
-  const { commandName } = interaction;
-
-  if (commandName === 'ping') {
-    await interaction.reply('Pong!');
-  } else if (commandName === 'beep') {
-    await interaction.reply('Boop!');
-  }
-});
-
 
 
 client.login(process.env.discordToken);
