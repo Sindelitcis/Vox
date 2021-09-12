@@ -17,6 +17,7 @@ const client = new Client({
 });
 client.commands = new Collection()
 const config = require("./config.json");
+const { DELETE_MESSAGE_TIMEOUT_INSTA, DELETE_MESSAGE_TIMEOUT_TINY, DELETE_MESSAGE_TIMEOUT_SHORT } = require('./constants');
 
 app.get("/", async (req, res) => {
   const ping = new Date();
@@ -32,7 +33,6 @@ const execComando = async (message) => {
   if (message.channel.type == "dm") return;
   if (!message.content.toLowerCase().startsWith(config.prefix)) return;
   if (message.content.startsWith(`<@!${client.user.id}>`) || message.content.startsWith(`<@${client.user.id}>`)) return;
-  console.log(message)
   const args = message.content
     .trim().slice(config.prefix.length)
     .split(/ +/g);
@@ -41,32 +41,43 @@ const execComando = async (message) => {
 
   try {
     const commandFile = require(`./commands/${command}.js`)
-    commandFile.run(client, message, args);
+    const { msg, delay } = await commandFile.run(client, message, args);
     try {
-      await message.delete({ timeout: 150 })
+      setTimeout(() => {
+        msg.delete();
+        message.delete();
+      }, delay)
+      //await message.delete({ timeout: 150 })
     } catch (e) { }
   } catch (err) {
     const comandos = require('./commands.json');
     if (comandos.map(c => c.comandos).flat().includes(command)) {
-      const comando = comandos[comandos.findIndex(comando => comando.comandos.includes(command))].arquivo;
-      const commandFile = require(`./commands/${comando}.js`)
-      commandFile.run(client, message, args);
       try {
-        await message.delete({ timeout: 150 })
+        const comando = comandos[comandos.findIndex(comando => comando.comandos.includes(command))].arquivo;
+        const commandFile = require(`./commands/${comando}.js`)
+        const { msg, delay } = await commandFile.run(client, message, args);
+        setTimeout(() => {
+          msg.delete();
+          message.delete();
+        }, delay)
+        //await message.delete({ timeout: 150 })
       } catch (e) { }
 
     } else {
-      message.reply(`digitou o corretamente? Não consegui executar "**${command}**".`).then(msg2 => msg2.delete({ timeout: 3000 }))
-      console.error("Erro:" + err);
-      try {
-        await message.delete({ timeout: 150 })
-      } catch (e) { }
+      message.reply(`digitou o corretamente? Não consegui executar "**${command}**".`)
+        .then(msg2 => {
+          setTimeout(() => {
+            msg2.delete();
+            message.delete();
+          }, DELETE_MESSAGE_TIMEOUT_SHORT)
+        })
+      //console.error("Erro:" + err);
     }
 
   }
 }
 client.on("messageCreate", async (message) => {
-    execComando(message)
+  execComando(message)
 })
 client.on("messageUpdate", (oldMessage, newMessage) => {
   execComando(newMessage);
@@ -104,15 +115,15 @@ client.on("ready", () => {
 // });
 client.on('interactionCreate', async interaction => {
   console.log(101)
-	if (!interaction.isCommand()) return;
+  if (!interaction.isCommand()) return;
 
-	const { commandName } = interaction;
+  const { commandName } = interaction;
 
-	if (commandName === 'ping') {
-		await interaction.reply('Pong!');
-	} else if (commandName === 'beep') {
-		await interaction.reply('Boop!');
-	}
+  if (commandName === 'ping') {
+    await interaction.reply('Pong!');
+  } else if (commandName === 'beep') {
+    await interaction.reply('Boop!');
+  }
 });
 
 
