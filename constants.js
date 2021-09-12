@@ -91,21 +91,30 @@ module.exports ={
       //     nome:"banqueiro"
       //   }
       // ],
-      // "Mapa": [
-      //   {
-      //     nome:"kaslow"
-      //   }
-      // ],
-      // "História": [
-      //   {
-      //     nome:"história-de-kaslow"
-      //   }
-      // ],
-      // "Loja": [
-      //   {
-      //     nome:"kaslow"
-      //   }
-      // ],
+      "Mapa": [
+        {
+          nome:"🗺️kaslow"
+        },
+        {
+          nome:"🗺️lol"
+        }
+      ],
+      "História": [
+        {
+          nome:"história-de-kaslow"
+        },
+        {
+          nome:"história-de-lol"
+        }
+      ],
+      "Loja": [
+        {
+          nome:"🍆kaslow"
+        },
+        {
+          nome:"🍆lol"
+        }
+      ],
       "Caçando / Viajando": [
         {
           nome:"em-curso"
@@ -116,12 +125,12 @@ module.exports ={
       {
         nome: "Kaslow",
         cor: "BLUE",
-        deixaVer: ['🛕kaslow'],
+        deixaVer: ['🛕kaslow', '🍆kaslow', '🗺️kaslow'],
       },
       {
-        nome: "Jale",
+        nome: "lol",
         cor: "RED",
-        deixaVer: [],
+        deixaVer: ['lol', '🍆lol', '🗺️lol'],
       },
       {
         nome: "Skyrim",
