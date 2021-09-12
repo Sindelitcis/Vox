@@ -42,13 +42,13 @@ const execComando = async (message) => {
   try {
     const commandFile = require(`./commands/${command}.js`)
     const { msg, delay } = await commandFile.run(client, message, args);
-    try {
-      setTimeout(() => {
-        msg.delete();
-        message.delete();
-      }, delay)
-      //await message.delete({ timeout: 150 })
-    } catch (e) { }
+    setTimeout(() => {
+      try {
+        if (msg && !msg.deleted) msg.delete();
+        if (message && !message.deleted) message.delete();
+      } catch (e) { console.error(e) }
+    }, delay)
+    //await message.delete({ timeout: 150 })
   } catch (err) {
     const comandos = require('./commands.json');
     if (comandos.map(c => c.comandos).flat().includes(command)) {
@@ -61,7 +61,7 @@ const execComando = async (message) => {
           message.delete();
         }, delay)
         //await message.delete({ timeout: 150 })
-      } catch (e) { }
+      } catch (e) { console.error(e) }
 
     } else {
       message.reply(`digitou o corretamente? Não consegui executar "**${command}**".`)
