@@ -31,6 +31,15 @@ module.exports = async (client, message, args, servidor, force = false) => {
 
       const canais = await Promise.all(promise_canais);
 
+      // Remover permissao de ver canais e categorias
+      [...canais, ...categorias].forEach(async canal => {
+        client.channels.cache.get(canal.id)
+          .updateOverwrite(message.guild.roles.everyone, {
+            SEND_MESSAGES: false,
+            VIEW_CHANNEL: false
+          })
+      });
+
       const promise_cargos = CONFIG.cargos.map(async cargo => {
         const createdCargo = await message.guild.roles.create({
           data: {
@@ -57,26 +66,17 @@ module.exports = async (client, message, args, servidor, force = false) => {
         nome: CONFIG.boasVindas
       })
       const cargos = await Promise.all(promise_cargos);
-      //console.log({cargoSeiLa: canais.find(canal=>canal.nome.toLowerCase() === 'kaslow')})
-      for(const cargo of CONFIG.cargos){
-        for(const naoDeixarVer of cargo.naoDeixaVer){
-          const canalPraNaoDeixarVer = [...canais, ...categorias].find(canal=>canal.nome.toLowerCase() === naoDeixarVer.toLocaleLowerCase());
-          const canal = client.channels.cache.get(canalPraNaoDeixarVer.id);
-          const cargoPraNaoDeixarVer = cargos.find(c=>c.nome.toLowerCase() === cargo.nome.toLowerCase());
-          //console.log({cargoPraNaoDeixarVer})
-          canal.updateOverwrite(cargoPraNaoDeixarVer.id, { VIEW_CHANNEL: false });
 
+      for (const cargo of CONFIG.cargos) {
+        for (const canCriado of [...canais, ...categorias]) {
+          if (cargo.deixaVer.includes(canCriado.nome)) {
+            const canal = client.channels.cache.get(canCriado.id);
+            const cargoPraDeixarVer = cargos.find(c => c.nome.toLowerCase() === cargo.nome.toLowerCase());
+            canal.updateOverwrite(cargoPraDeixarVer.id, { VIEW_CHANNEL: true });
+          }
         }
       }
-      // CONFIG.cargos.forEach(cargo  => {
-      //   cargo.naoDeixaVer.forEach(naoDeixaVer => {
-      //     // {nome: asdasda, id: 323312321}
-      //     const id = canais.find(canal => canal.nome === naoDeixaVer).id;
-      //     message.guild.channels.cache.get(id)
-      //       .permissionOverwrites.create(id, { VIEW_CHANNEL: false });
 
-      //   })
-      // })
       return ({ categorias, canais, cargos })
     }
     const config = await _config();

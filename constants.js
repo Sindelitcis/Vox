@@ -71,75 +71,62 @@ module.exports ={
     categorias: {
       "Geral": [
         {
-          visivel : false,
-          nome:"Kaslow"
+          nome:"🛕kaslow"
         },
         {
-          visivel : false,
           nome:"lol"
         },
         {
-          visivel : true,
           nome:"loucura"
         }
       ],
       // "NPCs": [
       //   {
-      //     visivel : false,
       //     nome:"ferreiro"
       //   },
       //   {
-      //     visivel : false,
       //     nome:"morador"
       //   },
       //   {
-      //     visivel : true,
       //     nome:"banqueiro"
       //   }
       // ],
       // "Mapa": [
       //   {
-      //     visivel : false,
       //     nome:"kaslow"
       //   }
       // ],
       // "História": [
       //   {
-      //     visivel : false,
       //     nome:"história-de-kaslow"
       //   }
       // ],
       // "Loja": [
       //   {
-      //     visivel : false,
       //     nome:"kaslow"
       //   }
       // ],
-      // "Caçando / Viajando": [
-      //   {
-      //     visivel : false,
-      //     nome:"em-curso"
-      //   }
-      // ]
+      "Caçando / Viajando": [
+        {
+          nome:"em-curso"
+        }
+      ]
     },
     cargos: [
       {
         nome: "Kaslow",
         cor: "BLUE",
-        deixaVer: [],
-        naoDeixaVer: []
+        deixaVer: ['🛕kaslow'],
       },
       {
         nome: "Jale",
         cor: "RED",
         deixaVer: [],
-        naoDeixaVer: []
       },
       {
         nome: "Skyrim",
         cor: "YELLOW",
         deixaVer: [],
-        naoDeixaVer: []
       }
     ]
   }
