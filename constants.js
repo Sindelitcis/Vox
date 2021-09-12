@@ -1,5 +1,5 @@
 module.exports ={
-  LOG_VOX: '883555158330572850',
+  LOG_VOX: '886413056555487273',
   MENU_TIMEOUT: 5*60*1000,
   DELETE_MESSAGE_TIMEOUT_EXTRA_SHORT: 1500,
   DELETE_MESSAGE_TIMEOUT_SHORT: 3000,
@@ -67,6 +67,7 @@ module.exports ={
     }
   },
   CONFIG: {
+    boasVindas: "Bemvendoasd asb vox",
     categorias: {
       "Geral": [
         {
@@ -82,44 +83,44 @@ module.exports ={
           nome:"loucura"
         }
       ],
-      "NPCs": [
-        {
-          visivel : false,
-          nome:"Ferreiro"
-        },
-        {
-          visivel : false,
-          nome:"Morador"
-        },
-        {
-          visivel : true,
-          nome:"Banqueiro"
-        }
-      ],
-      "Mapa": [
-        {
-          visivel : false,
-          nome:"Kaslow"
-        }
-      ],
-      "História": [
-        {
-          visivel : false,
-          nome:"História-de-Kaslow"
-        }
-      ],
-      "Loja": [
-        {
-          visivel : false,
-          nome:"Kaslow"
-        }
-      ],
-      "Caçando / Viajando": [
-        {
-          visivel : false,
-          nome:"Em Curso"
-        }
-      ]
+      // "NPCs": [
+      //   {
+      //     visivel : false,
+      //     nome:"ferreiro"
+      //   },
+      //   {
+      //     visivel : false,
+      //     nome:"morador"
+      //   },
+      //   {
+      //     visivel : true,
+      //     nome:"banqueiro"
+      //   }
+      // ],
+      // "Mapa": [
+      //   {
+      //     visivel : false,
+      //     nome:"kaslow"
+      //   }
+      // ],
+      // "História": [
+      //   {
+      //     visivel : false,
+      //     nome:"história-de-kaslow"
+      //   }
+      // ],
+      // "Loja": [
+      //   {
+      //     visivel : false,
+      //     nome:"kaslow"
+      //   }
+      // ],
+      // "Caçando / Viajando": [
+      //   {
+      //     visivel : false,
+      //     nome:"em-curso"
+      //   }
+      // ]
     },
     cargos: [
       {

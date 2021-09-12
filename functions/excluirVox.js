@@ -7,16 +7,18 @@ module.exports = async(client ,message, args, servidor) =>{
       const item = array[i];
       try{
         cache.get(item.id).delete();
-      } catch(e) {}
+      } catch(e) {
+        console.log(e)
+      }
         await timer(100);
       }
   }
   if(!servidor){
     return message.reply('servidor não encontrado')
   }
+  await _delete(message.guild.channels.cache, servidor.canais);
   await _delete(message.guild.channels.cache, servidor.categorias);
   await _delete(message.guild.roles.cache, servidor.cargos);
-  await _delete(message.guild.channels.cache, servidor.canais);
 
   await controller.servidores.update({ idDiscord: message.guild.id }, {$set: {desativado: true}, $unset:{reativadoEm: 1} });
 }

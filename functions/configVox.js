@@ -1,5 +1,6 @@
 const controller = require('../controller');
 const { CONFIG, DELETE_MESSAGE_TIMEOUT_MEDIUM } = require('../constants');
+const { Permissions } = require('discord.js');
 
 module.exports = async (client, message, args, servidor, force = false) => {
   const idDiscord = message.guild.id;
@@ -41,13 +42,48 @@ module.exports = async (client, message, args, servidor, force = false) => {
         return ({ nome: cargo.nome, id: createdCargo.id });
       })
 
+      const boasVindasCanal = await message.guild.channels
+        .create(CONFIG.boasVindas, {
+          type: 'text'
+        });
+
+      boasVindasCanal.updateOverwrite(message.guild.roles.everyone, {
+        SEND_MESSAGES: false,
+        VIEW_CHANNEL: true,
+        ADD_REACTIONS: false
+      })
+      canais.push({
+        id: boasVindasCanal.id,
+        nome: CONFIG.boasVindas
+      })
       const cargos = await Promise.all(promise_cargos);
+      //console.log({cargoSeiLa: canais.find(canal=>canal.nome.toLowerCase() === 'kaslow')})
+      for(const cargo of CONFIG.cargos){
+        for(const naoDeixarVer of cargo.naoDeixaVer){
+          const canalPraNaoDeixarVer = [...canais, ...categorias].find(canal=>canal.nome.toLowerCase() === naoDeixarVer.toLocaleLowerCase());
+          const canal = client.channels.cache.get(canalPraNaoDeixarVer.id);
+          const cargoPraNaoDeixarVer = cargos.find(c=>c.nome.toLowerCase() === cargo.nome.toLowerCase());
+          //console.log({cargoPraNaoDeixarVer})
+          canal.updateOverwrite(cargoPraNaoDeixarVer.id, { VIEW_CHANNEL: false });
+
+        }
+      }
+      // CONFIG.cargos.forEach(cargo  => {
+      //   cargo.naoDeixaVer.forEach(naoDeixaVer => {
+      //     // {nome: asdasda, id: 323312321}
+      //     const id = canais.find(canal => canal.nome === naoDeixaVer).id;
+      //     message.guild.channels.cache.get(id)
+      //       .permissionOverwrites.create(id, { VIEW_CHANNEL: false });
+
+      //   })
+      // })
       return ({ categorias, canais, cargos })
     }
     const config = await _config();
-    const { categorias, canais, cargos } = config;
+    const { categorias, canais, cargos, boasVindasCanal } = config;
 
     const servidor_check = await controller.servidores.getOne({ idDiscord });
+    const dono = await client.users.fetch(message.guild.ownerID);
     if (!servidor_check) {
       // CRIANDO UM DOCUMENTO NA DB NO SERVIDOR
       await controller.servidores.push({
@@ -57,8 +93,8 @@ module.exports = async (client, message, args, servidor, force = false) => {
         cargos,
         criadoEm: new Date().getTime(),
         dono: {
-          id: message.guild.owner.user.id,
-          tag: message.guild.owner.user.tag
+          id: dono.id,
+          tag: dono.username + '#' + dono.discriminator
         },
         nomeDoServidor: message.guild.name,
         ativadoPor: {
@@ -74,7 +110,7 @@ module.exports = async (client, message, args, servidor, force = false) => {
           canais,
           cargos,
           reativadoEm: new Date().getTime(),
-          'dono.tag': message.guild.members.cache.first().guild.ownerID,
+          'dono.tag': dono.username + '#' + dono.discriminator,
           nomeDoServidor: message.guild.name
         },
         $unset: {
