@@ -8,7 +8,7 @@ module.exports = async (client, message, args, servidor, force = false) => {
     const _config = async () => {
       const promise_categorias = Object.keys(CONFIG.categorias).map(async categoria => {
         const createdCategory = await message.guild.channels
-          .create(categoria, { type: 'category' });
+          .create(categoria, { type: 'GUILD_CATEGORY' });
 
         return ({ nome: categoria, id: createdCategory.id });
       })
@@ -34,7 +34,7 @@ module.exports = async (client, message, args, servidor, force = false) => {
       // Remover permissao de ver canais e categorias
       [...canais, ...categorias].forEach(async canal => {
         client.channels.cache.get(canal.id)
-          .updateOverwrite(message.guild.roles.everyone, {
+          .permissionOverwrites.edit(message.guild.roles.everyone, {
             SEND_MESSAGES: false,
             VIEW_CHANNEL: false
           })
@@ -42,11 +42,9 @@ module.exports = async (client, message, args, servidor, force = false) => {
 
       const promise_cargos = CONFIG.cargos.map(async cargo => {
         const createdCargo = await message.guild.roles.create({
-          data: {
             name: cargo.nome,
             color: cargo.cor,
             reason: 'Cargo VOX'
-          }
         });
         return ({ nome: cargo.nome, id: createdCargo.id });
       })
@@ -56,7 +54,7 @@ module.exports = async (client, message, args, servidor, force = false) => {
           type: 'text'
         });
 
-      boasVindasCanal.updateOverwrite(message.guild.roles.everyone, {
+      boasVindasCanal.permissionOverwrites.edit(message.guild.roles.everyone, {
         SEND_MESSAGES: false,
         VIEW_CHANNEL: true,
         ADD_REACTIONS: false
@@ -72,7 +70,7 @@ module.exports = async (client, message, args, servidor, force = false) => {
           if (cargo.deixaVer.includes(canCriado.nome)) {
             const canal = client.channels.cache.get(canCriado.id);
             const cargoPraDeixarVer = cargos.find(c => c.nome.toLowerCase() === cargo.nome.toLowerCase());
-            canal.updateOverwrite(cargoPraDeixarVer.id, { VIEW_CHANNEL: true });
+            canal.permissionOverwrites.edit(cargoPraDeixarVer.id, { VIEW_CHANNEL: true });
           }
         }
       }

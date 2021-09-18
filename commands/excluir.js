@@ -67,8 +67,11 @@ module.exports.run = async (client, message, args) => {
 
   }).catch(async (e) => {
     // Acaba o tempo
-
-    message.reply({ content: "o tempo expirou, ficamos felizes em saber que reconsiderou! :D" })
-      .then(msg => msg.delete({ timeout: DELETE_MESSAGE_TIMEOUT_SHORT }))
+    const msg = await message.reply({ content: "o tempo expirou, ficamos felizes em saber que reconsiderou! :D" }),
+    return{
+      msg,
+      delay: DELETE_MESSAGE_TIMEOUT_SHORT
+    }
+    
   });
 }
