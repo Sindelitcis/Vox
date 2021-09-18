@@ -4,19 +4,19 @@ module.exports = async(client,channel,message) =>{
   const persoEmbed = require('../embeds/personagens')(client, message);
   const { REACTIONS } = require('../constants');
   const reactions = REACTIONS.personagens;
-  React(message, channel, persoEmbed, reactions, async(emoji)=>{
+  React(client, message, persoEmbed, reactions, async(emoji)=>{
     switch(emoji){
       case reactions.listar:
         const personagens = await personagensDaConta(message)
         if(!personagens){
-          client.channels.cache.get(channel.id).send('Conta não encontrada');
+          return msg.edit({content: 'Conta não encontrada'});
         }else{
-        client.channels.cache.get(channel.id).send(personagens.length ? personagens : "Você ainda não possui nenhum personagem");
+          return msg.edit({content: personagens.length ? personagens : "Você ainda não possui nenhum personagem"});
         }
       break;
       case reactions.criar:
         const classesPrimarias = await controller.classes.get({primaria: true})
-        client.channels.cache.get(channel.id).send(JSON.stringify(classesPrimarias));
+        return client.channels.cache.get(channel.id).send({content: JSON.stringify(classesPrimarias)});
       break;
       case reactions.deletar:
 

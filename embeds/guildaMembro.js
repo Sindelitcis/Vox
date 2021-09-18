@@ -21,13 +21,13 @@ const embed = async(client, message) => {
     .setAuthor(`| ${guilda.nome}`, perfil_dc_lider.avatarURL())
     .setColor(guilda.cor)
     .setThumbnail(guilda.logo)
-    .setDescription([`Líder: **${perfil_dc_lider.tag}**\n`, options([
+    .setDescription(`Líder: **${perfil_dc_lider.tag}**\n`, options([
       `Membros: ${guildaCount}/${guilda.tamanho}`,
       `Ouro: ${guilda.banco}g`,
       `Nível: ${guilda.nivel} [${guilda.xp}/${GUILDA_LEVEL.xp}]`,
       `Imposto: 💰 ${guilda.imposto.gold.toFixed(2)}% ⛏️ ${guilda.imposto.xp.toFixed(2)}%`,
       `Bonus: ${GUILDA_LEVEL.bonus.length ? GUILDA_LEVEL.bonus.join(', ') : 'Nenhum'}`
-    ]), `\n_**${guilda.lema}**_`])
+    ]), `\n_**${guilda.lema}**_`)
     .setFooter(`Criado em: ${criadoEm}`);
 
 }

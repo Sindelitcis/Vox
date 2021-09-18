@@ -4,10 +4,10 @@ const controller = require('../controller');
 module.exports = async (client, message, args, servidor) => {
   const timer = ms => new Promise(res => setTimeout(res, ms))
   async function _delete(cache, array) {
-    for (var i = 0; i < array.length; i++) {
-      const item = array[i];
+    for (const msg of array) {
       try {
-        cache.get(item.id).delete();
+        console.log({msgId: msg.id})
+        cache.get(msg.id).delete();
       } catch (e) {
         console.log(e)
       }
@@ -20,6 +20,7 @@ module.exports = async (client, message, args, servidor) => {
       delay: DELETE_MESSAGE_TIMEOUT_SHORT
     };
   }
+  console.log(message.guild.cache)
   await _delete(message.guild.channels.cache, servidor.canais);
   await _delete(message.guild.channels.cache, servidor.categorias);
   await _delete(message.guild.roles.cache, servidor.cargos);

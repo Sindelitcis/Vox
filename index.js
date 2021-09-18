@@ -13,7 +13,8 @@ const client = new Client({
     'GUILD_PRESENCES',
     'DIRECT_MESSAGES'
   ],
-  partials: ["CHANNEL"]
+  partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
+
 });
 client.commands = new Collection()
 const config = require("./config.json");
@@ -43,10 +44,19 @@ const execComando = async (message) => {
     const commandFile = require(`./commands/${command}.js`)
     const { msg, delay } = await commandFile.run(client, message, args);
     setTimeout(() => {
-      try {
-        if (msg && !msg.deleted) msg.delete();
-        if (message && !message.deleted) message.delete();
-      } catch (e) { console.error(e); throw e }
+      if (msg && !msg.deleted && msg.delete)
+        try {
+          msg.delete();
+        } catch (e) {
+          console.error(e);
+        }
+      if (message && !message.deleted && message.delete)
+        try {
+          message.delete();
+        }
+        catch (e) {
+          console.error(e);
+        }
     }, delay)
     //await message.delete({ timeout: 150 })
   } catch (err) {
@@ -64,13 +74,14 @@ const execComando = async (message) => {
       } catch (e) { console.error(e) }
 
     } else {
-      message.reply(`digitou o corretamente? Não consegui executar "**${command}**".`)
-        .then(msg2 => {
-          setTimeout(() => {
-            msg2.delete();
-            message.delete();
-          }, DELETE_MESSAGE_TIMEOUT_SHORT)
-        })
+      console.log({ err })
+      // message.reply({content: `digitou o corretamente? Não consegui executar "**${command}**".`})
+      //   .then(msg2 => {
+      //     setTimeout(() => {
+      //       msg2.delete();
+      //       message.delete();
+      //     }, DELETE_MESSAGE_TIMEOUT_SHORT)
+      //   })
       //console.error("Erro:" + err);
     }
 

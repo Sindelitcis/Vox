@@ -1,25 +1,17 @@
 const Discord = require('discord.js')
 
-const react = (message, channel, embed, reactions, onReact) => {
-  
-  return channel.send(embed).then(msg=>{
-    Object.values(reactions).forEach(reaction=>{
-      msg.react(reaction)
-    })
+const react = async (client, message, embed, reactions, onReacted, root) => {
 
-    let filtro = (reaction, user) => (
-      Object.values(reactions)
-      .includes(reaction.emoji.name) && user.id == message.author.id
-    )
+  const msg = root ? await message.channel.create({ embeds: [embed] }) : await message.channel.create({ embeds: [embed] });
+  Promise.all(Object.values(reactions).map(reaction => msg.react(reaction)))
 
-    let coletor = msg.createReactionCollector(filtro);
-
-    coletor.on('collect', (reaction, user) => {
-      onReact(reaction.emoji.name)
-      reaction.users.remove(user);
-    })
+  client.on('messageReactionAdd', async (interaction, user) => {
+    if(user.bot) return
+    const author = user;
+    const reactedEmoji = interaction._emoji.name;
+    await onReacted(reactedEmoji, author);
   });
-
 }
+
 
 module.exports = react;

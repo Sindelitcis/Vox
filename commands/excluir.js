@@ -4,9 +4,9 @@ const { DELETE_MESSAGE_TIMEOUT_SHORT, LOG_VOX } = require('../constants');
 const excluir = require('../functions/excluirVox');
 
 module.exports.run = async (client, message, args) => {
-  const servidor = await controller.servidores.getOne({ idDiscord: message.guild.id, desativado: { $exists: false } });
+  const servidor = await controller.servidores.getOne({ idDiscord: message.guildId, desativado: { $exists: false } });
   if (!servidor) {
-    return message.reply('este servidor não está configurado. Digite `s+config` para começar!')
+    return message.reply({ content: 'este servidor não está configurado. Digite `s+config` para começar!' })
       .then(msg => msg.delete({ timeout: DELETE_MESSAGE_TIMEOUT_SHORT }));
   }
 
@@ -30,7 +30,7 @@ module.exports.run = async (client, message, args) => {
         collected.first().delete({ timeout: DELETE_MESSAGE_TIMEOUT_SHORT })
       } catch (e) { }
       return message
-        .reply('obrigado por cancelar a operação!')
+        .reply({ content: 'obrigado por cancelar a operação!' })
         .then(msg => msg.delete({ timeout: DELETE_MESSAGE_TIMEOUT_SHORT }))
     }
     // A partir daqui, roda se confirmou em deletar
@@ -43,7 +43,7 @@ module.exports.run = async (client, message, args) => {
 
     try {
       replyMessage.delete({ timeout: 150 });
-      message.channel.send("Excluindo...")
+      message.channel.send({ content: "Excluindo..." })
         .then((msg) => {
           msg.delete({ timeout: DELETE_MESSAGE_TIMEOUT_SHORT })
         });
@@ -55,18 +55,20 @@ module.exports.run = async (client, message, args) => {
       return items.map(item => item).join('\n');
     }
     client.channels.fetch(LOG_VOX).then(channel => {
-      channel.send(options([
-        `Excluído do servidor **${message.guild.name}**, ID: ${servidor.idDiscord}\n`,
-        '\`Query ↓',
-        `{ _id: ObjectId("${servidor._id}") }\`\n`,
-        `Dono que fez a crueldade: **${message.author.tag}**, ID: ${message.author.id}`
-      ]));
+      channel.send({
+        content: options([
+          `Excluído do servidor **${message.guild.name}**, ID: ${servidor.idDiscord}\n`,
+          '\`Query ↓',
+          `{ _id: ObjectId("${servidor._id}") }\`\n`,
+          `Dono que fez a crueldade: **${message.author.tag}**, ID: ${message.author.id}`
+        ])
+      });
     });
 
   }).catch(async (e) => {
     // Acaba o tempo
 
-    message.reply("o tempo expirou, ficamos felizes em saber que reconsiderou! :D")
+    message.reply({ content: "o tempo expirou, ficamos felizes em saber que reconsiderou! :D" })
       .then(msg => msg.delete({ timeout: DELETE_MESSAGE_TIMEOUT_SHORT }))
   });
 }
